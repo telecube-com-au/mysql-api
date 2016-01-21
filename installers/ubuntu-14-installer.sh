@@ -130,7 +130,7 @@ else
 	git clone git@github.com:telecube-com-au/mysql-api.git
 fi
 
-rsync -av --delete --exclude '.git*' --exclude '*.md' --exclude '*.example*' --exclude '*installer.sh' /opt/mysql-api/ /var/www/html/
+rsync -av --delete --exclude '.git*' /opt/mysql-api/html/ /var/www/html/
 
 
 
