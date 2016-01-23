@@ -119,8 +119,46 @@ service nginx restart
 
 # write the password to the config file in /opt so the control panel has access to the db
 echo "<?php" > /opt/mysql_api_config.inc.php
-echo "" > /opt/mysql_api_config.inc.php
-echo "<?" > /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
+
+echo "// ensure this definition exists before running the script." >> /opt/mysql_api_config.inc.php
+echo "if(!defined('MAIN_INCLUDED'))" >> /opt/mysql_api_config.inc.php
+echo "	exit(\"Not allowed here!\");" >> /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
+echo "// the master db for write/read" >> /opt/mysql_api_config.inc.php
+echo "\$master_db_host = \"\";" >> /opt/mysql_api_config.inc.php
+echo "\$master_db_port = \"\";" >> /opt/mysql_api_config.inc.php
+echo "\$master_db_user = \"\";" >> /opt/mysql_api_config.inc.php
+echo "\$master_db_pass = \"\";" >> /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
+echo "// readonly slaves" >> /opt/mysql_api_config.inc.php
+echo "\$db_slaves = array(" >> /opt/mysql_api_config.inc.php
+echo "		// readonly slave 1" >> /opt/mysql_api_config.inc.php
+echo "		array(" >> /opt/mysql_api_config.inc.php
+echo "				\"db_host\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_port\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_user\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_pass\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "			)," >> /opt/mysql_api_config.inc.php
+echo "		// readonly slave 2" >> /opt/mysql_api_config.inc.php
+echo "		array(" >> /opt/mysql_api_config.inc.php
+echo "				\"db_host\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_port\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_user\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "				\"db_pass\" => \"\"," >> /opt/mysql_api_config.inc.php
+echo "			)," >> /opt/mysql_api_config.inc.php
+echo "		// etc .." >> /opt/mysql_api_config.inc.php
+echo "	);" >> /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
+echo "// set strong keys here - a good key generator can be found at: https://www.grc.com/passwords.htm" >> /opt/mysql_api_config.inc.php
+echo "\$apikey 			= \"\";" >> /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
+echo "// http basic auth settings" >> /opt/mysql_api_config.inc.php
+echo "\$http_auth_enable 	= true; // enable|disable http auth by setting true|false" >> /opt/mysql_api_config.inc.php
+echo "\$http_auth_realm 	= \"MySQL API\";" >> /opt/mysql_api_config.inc.php
+echo "\$http_auth_user 	= \"\";" >> /opt/mysql_api_config.inc.php
+echo "\$http_auth_pass 	= \"\";" >> /opt/mysql_api_config.inc.php
+echo "" >> /opt/mysql_api_config.inc.php
 
 # check if the repo has been checked out and clone it if it hasn't
 if [ -d /opt/mysql-api ]; then
@@ -134,6 +172,19 @@ fi
 rsync -av --delete --exclude '.git*' /opt/mysql-api/html/ /var/www/html/
 
 
+echo "\n\nDone!"
+echo "#########################################"
+echo "Your api will be available at the following address(es)"
+echo ""
+HOST_IP=$(ifconfig | awk -F':' '/inet addr/&&!/127.0.0.1/{split($2,_," ");print _[1]}')
+arr=$(echo $HOST_IP | tr " " "\n")
+for x in $arr
+do
+    echo "https://$x/"
+done
+echo ""
+echo "Remember to set passwords and detail in /opt/mysql_api_config.php"
+echo "#########################################"
 
 
 
