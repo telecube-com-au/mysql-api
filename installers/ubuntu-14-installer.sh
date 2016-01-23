@@ -2,7 +2,7 @@
 
 #
 # This script will install Nginx with self signed certs and run it on port 443
-# Then install the api and configure the firewall to allow access on ports 22 and 443
+# It is expected that you have configured you firewall to allow access to the api on port 443 (https)
 # Only supports Ubuntu version(s) 14.04
 # It will install the required packages and configure the server
 # 
