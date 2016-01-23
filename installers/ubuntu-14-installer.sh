@@ -52,33 +52,6 @@ while true ; do
 	fi	
 done
 
-# generate a random 16 char str for mysql password
-mysql_root_pass=$(openssl rand -base64 16)
-
-echo "$mysql_root_pass" > /opt/mysql_root_pass
-
-x=0
-while true ; do
-
-	echo mysql-server mysql-server/root_password password $mysql_root_pass | sudo debconf-set-selections
-	echo mysql-server mysql-server/root_password_again password $mysql_root_pass | sudo debconf-set-selections
-
-	if debconf-apt-progress -- aptitude -y install mysql-server
-		then 
-			echo "done .."
-			break
-		else 
-			echo "oops, trying again in a few seconds .."
-			sleep 3
-	fi
-	
-	x=$((x+1))
-	if ["$x" = 30] ; then 
-		echo "\n\n## ERROR! ##\nFailed to install some critical packages!\n## ## ##\n"
-		break 
-	fi	
-done
-
 # create certs folder
 if [ ! -d /var/www/certs ]; then
 	mkdir -p /var/www/certs
@@ -155,7 +128,7 @@ if [ -d /opt/mysql-api ]; then
 	git pull
 else
 	cd /opt
-	git clone https://github.com/telecube-com-au/mysql-api.git
+	git clone https://github.com/telecube/mysql-api.git
 fi
 
 rsync -av --delete --exclude '.git*' /opt/mysql-api/html/ /var/www/html/
