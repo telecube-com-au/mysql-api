@@ -183,7 +183,7 @@ do
     echo "https://$x/"
 done
 echo ""
-echo "Remember to set passwords and detail in /opt/mysql_api_config.php"
+echo "Remember to set passwords and detail in /opt/mysql_api_config.inc.php"
 echo "#########################################"
 
 
